@@ -11,11 +11,16 @@ There are one working directory.
 
 * server (backend / Flask)
 
+<br>
+
+### Server-side
+
 To work in server-side put `cd server` to terminal
 
 To access virtual environment write `env\Scripts\activate.bat` to terminal
 
 <br>
+
 ## TechStack
 
 * Backend: Flask

@@ -1,3 +1,6 @@
 {
-  "conventionalCommits.scopes": ["server"]
+  "conventionalCommits.scopes": [
+    "server",
+    "readme"
+  ]
 }
