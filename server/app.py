@@ -1,5 +1,5 @@
 # import modules is required
-from flask import Flask, render_template, url_for
+from flask import Flask
 # Flask constructor takes the name of
 # current module (__name__) as argument.
 app = Flask(__name__)
@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return "<p>Hello, Flask!</p>"
 
 
 # main driver function
