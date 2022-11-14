@@ -5,7 +5,7 @@
 
 ### Repository 
 
-git: git clone git@github.com:ardabzlk/Micro-Blog-Playground.git
+git: git clone https://github.com/ardabzlk/Micro-Blog-Playground.git
 
 There are one working directory.
 
