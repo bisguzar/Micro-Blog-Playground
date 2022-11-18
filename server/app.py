@@ -1,13 +1,3 @@
-'''
-1. Create a MongoDB Atlas Database - Done
-2. Connect to the database
-3. Define an user document collection
-4. Create a new book documnet and add it to the collection
-5. Fetch the document
-6. Update the document
-7. Run queries on the collection
-8. Delete Document
-'''
 import flask
 import mongoengine as me
 from api_constants import mongo_password, mongo_user
@@ -19,9 +9,6 @@ from flask_cors import CORS
 
 app = flask.Flask("micro-blog-app")
 CORS(app)
-CORS(app, resources={r"\*": {'origins': "*"}})
-CORS(app, resources={r'\*': {'origins': 'http://localhost:8080',
-                             "allow_headers": "Access-Control-Allow-Origin", "Content-Type": "application/json", 'Accept': "application/json"}})
 
 
 # The toolbar is only enabled in debug mode:
@@ -45,7 +32,7 @@ me.connect(host=DB_URI)
 
 @app.route("/")
 def hello_world():
-    return "<p>Micro-Blog</p>"
+    return "<html><body>Micro-Blog</body></html>"
 
 
 app.add_url_rule("/createUser", view_func=createUser,
