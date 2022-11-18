@@ -1,1 +1,4 @@
 .vscode/
+server/api_constants.py
+
+__pycache__
