@@ -13,9 +13,11 @@ class User(db.Document):
     surname
     """
 
-    user_id = db.ObjectIdField()
     name = db.StringField()
     surname = db.StringField()
+    username = db.StringField()
+    email = db.StringField()
+    password = db.StringField()
 
     # to see the created user =>
     # def to_json(self):

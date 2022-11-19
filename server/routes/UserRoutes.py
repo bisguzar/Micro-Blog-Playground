@@ -1,6 +1,9 @@
 from bson import ObjectId
-from flask import json, jsonify, render_template, request
+from flask import json, jsonify, request
 from models import model
+from werkzeug.security import generate_password_hash
+from routes.auth.login_register import token_required
+
 
 # create new user
 
@@ -9,13 +12,17 @@ def createUser():
     # # to save the instance to the mongoDB collection = >
     post_data = request.json
     body_form_data = request.get_json()
-    user = model.User(user_id=ObjectId(), name=body_form_data.get('name'),
-                      surname=body_form_data.get('surname'))
+    hash_hassword = generate_password_hash(
+        body_form_data.get('password'), method='sha256')
+    user = model.User(name=body_form_data.get('name'),
+                      surname=body_form_data.get('surname'), username=body_form_data.get('username'), password=hash_hassword, email=body_form_data.get('email'))
     user.save()
-    out = {"result": str(post_data)}
+    out = {"result": str(post_data), "status": "success",
+           "message": "user created"}
     return json.dumps(out)
 
 # get all user list
+
 
 
 def getUserList():
@@ -57,7 +64,7 @@ def getUserList():
 # print(userList)
 # print(userList)
 
-# fetch all the books
+# fetch all the users
 # ----------------------------------------------------
 # find users whose  surname-name contains Bozlak
 # userList = []
