@@ -2,12 +2,14 @@
   <div class="test">
     <v-row class="align-center justify-center">
       <v-col cols="8">
-        <v-data-table
-          :headers="headers"
-          :items="userList"
-          :items-per-page="5"
-          class="elevation-1"
-        ></v-data-table>
+        <v-card class="mt-12">
+          <v-data-table
+            :headers="headers"
+            :items="userList"
+            :items-per-page="5"
+            class="elevation-1"
+          ></v-data-table>
+        </v-card>
       </v-col>
     </v-row>
   </div>
@@ -27,20 +29,15 @@ export default {
     ],
     userList: [],
   }),
-  created() {
-    if (!localStorage.getItem("isAuthenticated")) {
-      this.$router.push("login");
-    }
-  },
+
   mounted() {
-    
     this.getUserList();
   },
   methods: {
     getUserList() {
       let data = {
         headers: {
-          "x-access-token": localStorage.getItem("JWT"),
+          "x-access-token": localStorage.getItem("id_token"),
         },
       };
       this.axios

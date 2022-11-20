@@ -3,16 +3,19 @@
     <v-row class="align-center justify-center">
       <v-col cols="4">
         <v-card class="elevation-0" height="120%">
+          <v-card-title primary-title> Please Login </v-card-title>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
               v-model="loginInfo.email"
               label="E-mail"
+              :rules="emailRules"
               required
             ></v-text-field>
 
             <v-text-field
               v-model="loginInfo.password"
               label="Password"
+              :rules="nonEmpty"
               required
             ></v-text-field>
 
@@ -23,7 +26,16 @@
               @click="login"
               :loading="loading"
             >
-              Submit
+              Login
+            </v-btn>
+            
+            <v-btn
+              color="success"
+              class="mr-4"
+              @click="$router.push('register')"
+              :loading="loading"
+            >
+              Sign Up
             </v-btn>
           </v-form>
         </v-card>
@@ -32,6 +44,9 @@
   </v-container>
 </template>
 <script>
+import { LOGIN, LOGOUT } from "@/core/services/store/auth.module";
+import { mapGetters, mapState } from "vuex";
+
 export default {
   name: "login-component",
   data() {
@@ -39,6 +54,7 @@ export default {
       valid: true,
       loading: false,
       loginInfo: { email: "", password: "" },
+      nonEmpty: [(v) => !!v || "E-mail is required"],
       nameRules: [
         (v) => !!v || "Name is required",
         (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
@@ -50,35 +66,36 @@ export default {
     };
   },
   methods: {
+    goHome() {
+      this.$router.push("home");
+    },
     async login() {
       this.loading = true;
-      const bodyFormData = {
-        email: this.loginInfo.email,
-        password: this.loginInfo.password,
-      };
-      console.log(bodyFormData);
-      this.axios({
-        method: "post",
-        baseURL: "http://127.0.0.1:8000/login",
-        data: JSON.stringify(bodyFormData),
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      })
-        .then(async (response) => {
-          this.loading = false;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          if (response.status == 200) {
-            localStorage.setItem("JWT", response.data.token);
-            localStorage.setItem("isAuthenticated", true);
-           this.$router.push("user");
+      const email = this.loginInfo.email;
+      const password = this.loginInfo.password;
+      this.$store.dispatch(LOGOUT);
+      this.$store
+        .dispatch(LOGIN, { email, password })
+        .then((response) => {
+          this.loadingSignIn1 = false;
+          console.log(response);
+          if (response.status != 500) {
+            this.goHome();
           }
         })
         .catch(() => {
           this.loading = false;
         });
     },
+  },
+  created() {
+    this.$store.dispatch(LOGOUT);
+  },
+  computed: {
+    ...mapState({
+      errors: (state) => state.auth.errors,
+    }),
+    ...mapGetters(["currentUser"]),
   },
 };
 </script>

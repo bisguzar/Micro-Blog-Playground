@@ -1,59 +1,79 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    redirect: "Home",
+    component: () => import("@/layout/Layout.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: "/home",
+        name: "Home",
+        component: () => import("@/views/Home.vue"),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "/user",
+        name: "User",
+        component: () => import("@/views/User.vue"),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+    ],
   },
   {
     path: "/login",
-    name: "Login",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(
-        /* webpackChunkName: "about" */ "../views/AuthViews/LoginView.vue"
-      ),
+    component: () => import("@/layout/ExternalLayout.vue"),
+    meta: {
+      requiresAuth: false,
+    },
+    children: [
+      {
+        path: "/login",
+        name: "Login",
+        component: () => import("@/views/AuthViews/LoginView.vue"),
+      },
+      {
+        path: "/register",
+        name: "Register",
+        component: () => import("@/views/AuthViews/RegisterView.vue"),
+      },
+    ],
   },
+
   {
-    path: "/register",
-    name: "Register",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(
-        /* webpackChunkName: "about" */ "../views/AuthViews/RegisterView.vue"
-      ),
-  },
-  {
-    path: "/user",
-    name: "User",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/User.vue"),
+    path: "*",
+    redirect: "/login",
   },
 ];
 
 const router = new VueRouter({
   routes,
 });
+
+const onError = (e) => {
+  // avoid NavigationDuplicated
+  if (e.name !== "NavigationDuplicated") throw e;
+};
+const _push = router.__proto__.push;
+// then override it
+router.__proto__.push = function push(...args) {
+  try {
+    const op = _push.call(this, ...args);
+    if (op instanceof Promise) op.catch(onError);
+    return op;
+  } catch (e) {
+    onError(e);
+  }
+};
 
 export default router;

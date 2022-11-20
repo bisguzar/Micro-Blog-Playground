@@ -6,7 +6,6 @@
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
               v-model="registerInfo.name"
-              :counter="10"
               :rules="nameRules"
               label="Name"
               required
@@ -32,10 +31,12 @@
             ></v-text-field>
             <v-text-field
               v-model="registerInfo.password"
+              :rules="NonEmpty"
               label="Password"
               required
             ></v-text-field>
-
+          </v-form>
+          <v-card-actions>
             <v-btn
               :disabled="!valid"
               color="success"
@@ -45,13 +46,20 @@
             >
               Submit
             </v-btn>
-          </v-form>
+            <v-spacer></v-spacer>
+            <p class="primary--text">
+              Already have an account?
+              <a class="success--text" @click="$router.push('login')">Login</a>
+            </p>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
+import { REGISTER, LOGOUT } from "@/core/services/store/auth.module";
+
 export default {
   name: "register-component",
   data() {
@@ -68,10 +76,8 @@ export default {
       },
       userList: [],
 
-      nameRules: [
-        (v) => !!v || "Name is required",
-        (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
-      ],
+      NonEmpty: [(v) => !!v || "This field required"],
+      nameRules: [(v) => !!v || "Name is required"],
       emailRules: [
         (v) => !!v || "E-mail is required",
         (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
@@ -81,29 +87,58 @@ export default {
   methods: {
     async postUser() {
       this.loading = true;
-
+      const name = this.registerInfo.name;
+      const surname = this.registerInfo.surname;
+      const username = this.registerInfo.username;
+      const email = this.registerInfo.email;
+      const password = this.registerInfo.password;
+      this.$store
+        .dispatch(REGISTER, {
+          name,
+          surname,
+          username,
+          email,
+          password,
+        })
+        .then(async (response) => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          this.loading = false;
+          if (response.data.message !== "user created") {
+            this.$store.dispatch(LOGOUT);
+          } else {
+            this.$router.push("/home");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    login(credientals) {
+      this.loading = true;
       const bodyFormData = {
-        name: this.registerInfo.name,
-        surname: this.registerInfo.surname,
-        username: this.registerInfo.username,
-        email: this.registerInfo.email,
-        password: this.registerInfo.password,
+        email: credientals.email,
+        password: credientals.password,
       };
       this.axios({
         method: "post",
-        baseURL: "http://127.0.0.1:8000/createUser",
+        baseURL: "http://127.0.0.1:8000/login",
         data: JSON.stringify(bodyFormData),
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-      }).then(async (response) => {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        if (response.status == 200) {
-          this.$router.push("login");
-        }
-        this.loading = false;
-      });
+      })
+        .then((response) => {
+          if (response.status == 200) {
+            console.log(response);
+            localStorage.setItem("JWT", response.data.token);
+            localStorage.setItem("isAuthenticated", true);
+            localStorage.setItem("email", credientals.email);
+          }
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
   },
 };
