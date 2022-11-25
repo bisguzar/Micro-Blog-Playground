@@ -1,40 +1,19 @@
-import datetime
-from bson import ObjectId
-from flask import json, jsonify, request
-import jwt
-from models import model
-from werkzeug.security import generate_password_hash
-from routes.auth.login_register import token_required
+from models.model import User
+from flask import jsonify
+from Global.JWT_service import token_required
 
 
-# create new user
-
-
-def createUser():
-    # # to save the instance to the mongoDB collection = >
-    token = None
-    post_data = request.json
-    body_form_data = request.get_json()
-    hash_hassword = generate_password_hash(
-        body_form_data.get('password'), method='sha256')
-    user = model.User(name=body_form_data.get('name'),
-                      surname=body_form_data.get('surname'), username=body_form_data.get('username'), password=hash_hassword, email=body_form_data.get('email'))
-    user.save()
-    token = jwt.encode({'email': user.email, 'exp': datetime.datetime.utcnow(
-    ) + datetime.timedelta(minutes=30)}, 'micro-blog-playground')
-    post_data["token"] = token
-    out = {"result": post_data, "status": "success",
-           "message": "user created"}
-    return json.dumps(out)
-
+# ------------------------------------------------------------
 # get all user list
 
 
-def getUserList():
+@token_required
+def users(current_user):
     userList = []
-    for user in model.User.objects().order_by("surname"):
+    for user in User.objects().order_by("surname"):
         userList.append(user)
     return jsonify(userList)
+# ------------------------------------------------------------
 
 
 """
