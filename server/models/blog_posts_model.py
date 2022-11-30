@@ -14,6 +14,13 @@ class blog_posts(db.Document):
     date
     """
     user_id = db.ObjectIdField()
-    header = db.StringField()
+    title = db.StringField()
     content = db.StringField()
     date = db.DateField()
+    category_id = db.IntField()
+
+
+class blog_categories(db.Document):
+
+    category_id = db.IntField()
+    category_name = db.StringField()

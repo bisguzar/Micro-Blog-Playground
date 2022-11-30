@@ -2,10 +2,10 @@ from flask import jsonify, request, make_response
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from models.user_model import User
-import json
 import datetime
 import jwt
-
+from bson import json_util
+import json
 
 # ------------------------------------------------------------
 # create new user
@@ -41,18 +41,24 @@ def login():
     body_form_data = request.get_json()
     authUserEmail = body_form_data.get('email')
     authPassword = body_form_data.get('password')
+
+
     if not authUserEmail or not authPassword:
         return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
     user = User.objects(email=authUserEmail).first()
+    response_data = {"uid": user.id}
     if not authUserEmail or not authPassword:
         return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
     if check_password_hash(user.password, authPassword):
         token = jwt.encode({'email': user.email, 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=30)}, 'micro-blog-playground')
+        ) + datetime.timedelta(hours=6)}, 'micro-blog-playground')
+        response_data["token"] = token
 
-        return jsonify({'token': token})
+        json_data_with_backslashes = json_util.dumps(response_data)
+        json_data = json.loads(json_data_with_backslashes)
+
+        return make_response(json_data, 200)
 
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
 # -----------------------------------------------------------

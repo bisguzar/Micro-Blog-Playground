@@ -8,7 +8,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from models.user_model import db
 from routes.user_routes import users
 from routes.auth.login_register_routes import login, register
-from routes.blog_posts_routes import add_post, posts
+from routes.blog_posts_routes import add_post, posts, blog_post_categories
 from flask_cors import CORS
 
 with open('config.json', 'r') as f:
@@ -55,6 +55,12 @@ app.add_url_rule("/blog_posts/add", view_func=add_post,
 
 app.add_url_rule("/blog_posts", view_func=posts,
                  methods=["GET"])
+
+app.add_url_rule("/blog_posts/categories", view_func=blog_post_categories,
+                 methods=["GET"])
+
+# app.add_url_rule("/blog_posts/add_category", view_func=add_category,
+#                  methods=["POST"])
 
 # ----------------------------------------------------
 
