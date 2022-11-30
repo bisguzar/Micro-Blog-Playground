@@ -1,6 +1,6 @@
 from models.model import User
-from flask import jsonify
-from Global.JWT_service import token_required
+from flask import jsonify, make_response
+from services.JWT_service import token_required
 
 
 # ------------------------------------------------------------
@@ -10,9 +10,9 @@ from Global.JWT_service import token_required
 @token_required
 def users(current_user):
     userList = []
-    for user in User.objects().order_by("surname"):
+    for user in User.objects():
         userList.append(user)
-    return jsonify(userList)
+    return make_response(userList)
 # ------------------------------------------------------------
 
 

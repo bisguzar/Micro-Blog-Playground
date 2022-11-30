@@ -21,7 +21,6 @@ def token_required(f):
         try:
             data = jwt.decode(token, 'micro-blog-playground',
                               algorithms=['HS256'])
-            print(data)
             current_user = User.objects(username=data.get('email')).first()
         except:
             return jsonify({'message': 'Token is invalid!'}), 401

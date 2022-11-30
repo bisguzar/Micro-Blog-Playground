@@ -2,7 +2,6 @@ from flask import jsonify, request, make_response
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from models.model import User
-from Global.JWT_service import token_required
 import json
 import datetime
 import jwt
@@ -10,7 +9,7 @@ import jwt
 
 # ------------------------------------------------------------
 # create new user
-def createUser():
+def register():
     # # to save the instance to the mongoDB collection = >
 
     token = None
@@ -31,16 +30,15 @@ def createUser():
         post_data["token"] = token
         out = {"result": post_data, "status": "success",
                "message": "user created"}
-        return json.dumps(out)
+        return make_response(out, 200)
 # ------------------------------------------------------------
 
 # ------------------------------------------------------------
 # user login
 
 
-def loginUser():
+def login():
     body_form_data = request.get_json()
-    print(body_form_data)
     authUserEmail = body_form_data.get('email')
     authPassword = body_form_data.get('password')
     if not authUserEmail or not authPassword:
