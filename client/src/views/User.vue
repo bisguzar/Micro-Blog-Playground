@@ -37,14 +37,13 @@ export default {
     getUserList() {
       let data = {
         headers: {
-          "x-access-token": localStorage.getItem("id_token"),
+          Authorization: "Bearer " + localStorage.getItem("id_token"),
         },
       };
-      this.axios
-        .get("http://127.0.0.1:8000/getUserList", data)
-        .then((response) => {
-          this.userList = response.data;
-        });
+      this.axios.get("http://127.0.0.1:8000/users", data).then((response) => {
+        this.userList = response.data;
+        console.log(this.userList[0]._id.$oid);
+      });
     },
   },
 };

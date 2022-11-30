@@ -15,6 +15,9 @@
             <v-text-field
               v-model="loginInfo.password"
               label="Password"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+               :type="showPassword ? 'text' : 'password'"
+                @click:append="showPassword = !showPassword"
               :rules="nonEmpty"
               required
             ></v-text-field>
@@ -53,6 +56,7 @@ export default {
     return {
       valid: true,
       loading: false,
+       showPassword: false,
       loginInfo: { email: "", password: "" },
       nonEmpty: [(v) => !!v || "E-mail is required"],
       nameRules: [
