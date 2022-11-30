@@ -1,14 +1,18 @@
 from functools import wraps
 from flask import jsonify, request
 import jwt
-from models.model import User
+from models.user_model import User
+import json
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+secret_key = config["SECRET_KEY"]
 
 
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-
         if 'Authorization' in request.headers:
 
             bearer = request.headers.get(
@@ -19,7 +23,7 @@ def token_required(f):
             return jsonify({'message': 'Token is missing'}), 401
 
         try:
-            data = jwt.decode(token, 'micro-blog-playground',
+            data = jwt.decode(token, secret_key,
                               algorithms=['HS256'])
             current_user = User.objects(username=data.get('email')).first()
         except:

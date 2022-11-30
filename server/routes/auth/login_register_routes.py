@@ -1,7 +1,7 @@
 from flask import jsonify, request, make_response
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-from models.model import User
+from models.user_model import User
 import json
 import datetime
 import jwt

@@ -1,4 +1,3 @@
-from bson import json_util
 from flask_mongoengine import MongoEngine
 db = MongoEngine()
 

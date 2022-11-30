@@ -5,9 +5,10 @@ import mongoengine as me
 from api_constants import mongo_password, mongo_user
 # This extension adds a toolbar overlay to Flask applications containing useful information for debugging. =>
 from flask_debugtoolbar import DebugToolbarExtension
-from models.model import db
-from routes.user.user_routes import users
+from models.user_model import db
+from routes.user_routes import users
 from routes.auth.login_register_routes import login, register
+from routes.blog_posts_routes import add_post, posts
 from flask_cors import CORS
 
 with open('config.json', 'r') as f:
@@ -46,6 +47,15 @@ app.add_url_rule("/users", methods=["GET"], view_func=users)
 
 app.add_url_rule("/login", view_func=login,
                  methods=["GET", "POST"])
+# ----------------------------------------------------
+# ----------------------------------------------------
+# * Blog Posts routes start
+app.add_url_rule("/blog_posts/add", view_func=add_post,
+                 methods=["POST"])
+
+app.add_url_rule("/blog_posts", view_func=posts,
+                 methods=["GET"])
+
 # ----------------------------------------------------
 
 
