@@ -1,7 +1,6 @@
 import axios from "axios";
 import ApiService from "@/core/services/api.service";
 import JwtService from "@/core/services/jwt.service";
-import router from "../../../router";
 
 // action typeexport const namespaced = trues
 export const VERIFY_AUTH = "verifyAuth";
@@ -82,7 +81,7 @@ const actions = {
       };
       axios({
         method: "post",
-        baseURL: "http://127.0.0.1:8000/createUser",
+        baseURL: "http://127.0.0.1:8000/register",
         data: JSON.stringify(bodyFormData),
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +90,6 @@ const actions = {
       })
         .then((response) => {
           resolve(response);
-          console.log(response);
           context.commit(SET_AUTH, response.data.result);
           context.commit(SET_PASSWORD, credentials.password);
           context.commit(SET_EMAIL, credentials.email);
@@ -120,6 +118,7 @@ const mutations = {
   [SET_AUTH](state, user) {
     state.isAuthenticated = true;
     state.errors = {};
+    state.user.uid = user.uid.$oid;
     JwtService.saveToken(user.token);
   },
   [SET_PASSWORD](state, password) {
@@ -134,7 +133,6 @@ const mutations = {
   [PURGE_AUTH](state) {
     state.isAuthenticated = false;
     state.user = {};
-    router.push("/login");
     JwtService.destroyToken();
   },
 };

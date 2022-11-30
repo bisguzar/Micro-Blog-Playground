@@ -82,7 +82,6 @@ export default {
         .dispatch(LOGIN, { email, password })
         .then((response) => {
           this.loadingSignIn1 = false;
-          console.log(response);
           if (response.status != 500) {
             this.goHome();
           }

@@ -130,7 +130,6 @@ export default {
       })
         .then((response) => {
           if (response.status == 200) {
-            console.log(response);
             localStorage.setItem("JWT", response.data.token);
             localStorage.setItem("isAuthenticated", true);
             localStorage.setItem("email", credientals.email);

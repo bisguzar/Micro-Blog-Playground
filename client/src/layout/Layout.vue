@@ -8,6 +8,7 @@
       <v-spacer></v-spacer>
 
       <router-link to="/"><div class="white--text mx-2">Home</div></router-link>
+      <router-link to="/Posts"><div class="white--text mx-2">Posts</div></router-link>
 
       <router-link to="/user"
         ><div class="white--text mx-2">User</div></router-link
@@ -58,16 +59,9 @@ export default {
     },
     purgeAuth() {
       this.logout()   
-      localStorage.setItem("isAuthenticated", false);
-      localStorage.setItem("JWT", null);
       this.$router.push("login");
     },
-    chekAuth(x) {
-      if (!x) {
-        console.log("imhere");
-        this.$router.push("login");
-      }
-    },
+
   },
 
 

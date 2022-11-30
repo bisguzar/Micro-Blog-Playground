@@ -28,6 +28,22 @@ const routes = [
           requiresAuth: true,
         },
       },
+      {
+        path: "/posts",
+        name: "Posts",
+        component: () => import("@/views/BlogViews/PostsView.vue"),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "/new_post",
+        name: "New_Post",
+        component: () => import("@/views/BlogViews/NewPostView.vue"),
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
   {
@@ -41,11 +57,17 @@ const routes = [
         path: "/login",
         name: "Login",
         component: () => import("@/views/AuthViews/LoginView.vue"),
+        meta: {
+          requiresAuth: false,
+        },
       },
       {
         path: "/register",
         name: "Register",
         component: () => import("@/views/AuthViews/RegisterView.vue"),
+        meta: {
+          requiresAuth: false,
+        },
       },
     ],
   },

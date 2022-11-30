@@ -2,7 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "@/core/services/store";
-// import { VERIFY_AUTH } from "@/core/services/store/auth.module";
+import ApiService from "@/core/services/api.service";
+
+import { VERIFY_AUTH } from "@/core/services/store/auth.module";
 
 import vuetify from "./plugins/vuetify";
 import axios from "axios";
@@ -12,16 +14,24 @@ Vue.config.productionTip = false;
 
 Vue.use(VueAxios, axios);
 
+ApiService.init("http://127.0.0.1:8000/");
+console.log(ApiService);
 // GOOD
 router.beforeEach((to, from, next) => {
-  if (
-    to.meta.requiresAuth === true &&
-    store.state.auth.isAuthenticated === false
-  ) {
-    router.push("login");
-  } else {
+  // Ensure we checked auth before each page load.
+  if (to.name == "404") {
     next();
+  } else {
+    // Ensure we checked auth before each page load.
+    Promise.all([store.dispatch(VERIFY_AUTH)]).then(next);
   }
+
+  // reset config to initial state
+
+  // Scroll page to top on every route change
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+  }, 100);
 });
 
 new Vue({
