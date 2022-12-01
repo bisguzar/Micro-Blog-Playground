@@ -2,7 +2,8 @@ from models.user_model import User
 from flask import make_response
 from services.JWT_service import token_required
 
-
+from bson import json_util
+import json
 # ------------------------------------------------------------
 # get all user list
 
@@ -13,6 +14,28 @@ def users(current_user):
     for user in User.objects():
         userList.append(user)
     return make_response(userList)
+# ------------------------------------------------------------
+
+# ------------------------------------------------------------
+# get all user list
+
+
+@token_required
+def singleton_user(current_user, uid):
+    response = {}
+    try:
+        user = User.objects(id=uid).first()
+        user = user.to_json()
+        response["data"] = user
+        response["status"] = 200
+
+        return make_response(response)
+    except:
+        response["data"] = "User not found"
+        response["status"] = 404
+        return make_response(response, 404)
+
+
 # ------------------------------------------------------------
 
 

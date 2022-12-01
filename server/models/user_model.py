@@ -1,4 +1,6 @@
 from flask_mongoengine import MongoEngine
+from bson import json_util
+import json
 db = MongoEngine()
 
 
@@ -19,13 +21,13 @@ class User(db.Document):
     password = db.StringField()
 
     # to see the created user =>
-    # def to_json(self):
-    #     bson_data = [{'user_id': self.user_id,
-    #                   'name': self.name, 'surname': self.surname}]
+    def to_json(self):
+        bson_data = [{'user_id': self.id,
+                      'name': self.name, 'surname': self.surname, 'username': self.username, 'email': self.email, 'password': self.password}]
 
-    #     json_data_with_backslashes = json_util.dumps(bson_data)
-    #     json_data = json.loads(json_data_with_backslashes)
-    #     return json_data
+        json_data_with_backslashes = json_util.dumps(bson_data)
+        json_data = json.loads(json_data_with_backslashes)
+        return json_data
 # ----------------------------------------------
 
 
