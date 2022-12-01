@@ -1,8 +1,4 @@
-from flask_mongoengine import MongoEngine
-
-db = MongoEngine()
-
-
+from models.models import db
 # ----------------------------------------------
 # User collection
 class blog_posts(db.Document):
@@ -13,14 +9,14 @@ class blog_posts(db.Document):
     content
     date
     """
-    user_id = db.ObjectIdField()
-    title = db.StringField()
-    content = db.StringField()
-    date = db.DateField()
-    category_id = db.IntField()
+    user_id = db.ObjectIdField(null=False, required=True, exists=True)
+    title = db.StringField(null=False, required=True, exists=True)
+    content = db.StringField(null=False, required=True, exists=True)
+    date = db.DateField(null=False, required=True, exists=True)
+    category_id = db.IntField(null=False, required=True, exists=True)
 
 
 class blog_categories(db.Document):
 
-    category_id = db.IntField()
-    category_name = db.StringField()
+    category_id = db.IntField(null=False, required=True, exists=True)
+    category_name = db.StringField(null=False, required=True, exists=True)

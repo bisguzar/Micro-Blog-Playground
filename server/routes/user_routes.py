@@ -2,8 +2,6 @@ from models.user_model import User
 from flask import make_response
 from services.JWT_service import token_required
 
-from bson import json_util
-import json
 # ------------------------------------------------------------
 # get all user list
 

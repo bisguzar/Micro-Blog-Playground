@@ -1,11 +1,12 @@
-from flask_mongoengine import MongoEngine
 from bson import json_util
 import json
-db = MongoEngine()
+from models.models import db
 
 
 # ----------------------------------------------
 # User collection
+
+
 class User(db.Document):
     """
     User model for user collection
@@ -14,11 +15,11 @@ class User(db.Document):
     surname
     """
 
-    name = db.StringField()
-    surname = db.StringField()
-    username = db.StringField()
-    email = db.StringField()
-    password = db.StringField()
+    name = db.StringField(null=False, required=True, exists=True)
+    surname = db.StringField(null=False, required=True, exists=True)
+    username = db.StringField(null=False, required=True, exists=True)
+    email = db.StringField(null=False, required=True, exists=True)
+    password = db.StringField(null=False, required=True, exists=True)
 
     # to see the created user =>
     def to_json(self):

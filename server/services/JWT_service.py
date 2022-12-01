@@ -3,6 +3,8 @@ from flask import jsonify, request
 import jwt
 from models.user_model import User
 import json
+
+
 with open('config.json', 'r') as f:
     config = json.load(f)
 

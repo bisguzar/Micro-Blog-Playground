@@ -1,21 +1,21 @@
 # imports
 import json
-import flask
-import mongoengine as me
+from flask import Flask
 from api_constants import mongo_password, mongo_user
 # This extension adds a toolbar overlay to Flask applications containing useful information for debugging. =>
 from flask_debugtoolbar import DebugToolbarExtension
-from models.user_model import db
 from routes.user_routes import users, singleton_user
 from routes.auth.login_register_routes import login, register
-from routes.blog_posts_routes import add_post, posts, blog_post_categories
+from routes.blog_posts_routes import add_post, posts, blog_post_categories, single_post
 from flask_cors import CORS
+from models.models import db
 
 with open('config.json', 'r') as f:
     config = json.load(f)
 
+app = Flask(config["APP_NAME"])
 
-app = flask.Flask(config["APP_NAME"])
+
 CORS(app)
 
 
@@ -29,14 +29,14 @@ app.config['SECRET_KEY'] = config["SECRET_KEY"]
 DebugToolbarExtension(app)
 
 db.init_app(app)
-me.disconnect()
-# 2. conneect to the database
+db.disconnect()
+# 2. connect to the database
 database_name = config["DB_NAME"]
 user = mongo_user
 password = mongo_password
 DB_URI = "mongodb+srv://{}:{}@cluster0.ldccoab.mongodb.net/{}?retryWrites=true&w=majority".format(user,
                                                                                                   password, database_name)
-me.connect(host=DB_URI)
+db.connect(host=DB_URI)
 
 # ----------------------------------------------------
 # * Login Register routes start
@@ -61,11 +61,16 @@ app.add_url_rule("/blog_posts/add", view_func=add_post,
 app.add_url_rule("/blog_posts", view_func=posts,
                  methods=["GET"])
 
+app.add_url_rule("/blog_posts/<post_id>", view_func=single_post,
+                 methods=["GET"])
+
 app.add_url_rule("/blog_posts/categories", view_func=blog_post_categories,
                  methods=["GET"])
 
-# app.add_url_rule("/blog_posts/add_category", view_func=add_category,
-#                  methods=["POST"])
+"""
+app.add_url_rule("/blog_posts/add_category", view_func=add_category,
+                  methods=["POST"])
+"""
 
 # ----------------------------------------------------
 

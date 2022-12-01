@@ -71,7 +71,7 @@ export default {
         user_id: this.currentUser.uid,
         title: this.postDetail.title,
         content: this.postDetail.content,
-        category: this.postDetail.category,
+        category_id: this.postDetail.category,
       };
       axios({
         method: "post",
