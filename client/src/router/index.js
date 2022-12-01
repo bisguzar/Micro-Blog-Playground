@@ -37,6 +37,14 @@ const routes = [
         },
       },
       {
+        path: "/Posts/:postID",
+        name: "Post",
+        component: () => import("@/views/BlogViews/PostView.vue"),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
         path: "/new_post",
         name: "New_Post",
         component: () => import("@/views/BlogViews/NewPostView.vue"),

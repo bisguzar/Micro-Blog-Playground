@@ -41,7 +41,7 @@
             {{ item.content }}
           </v-card-subtitle>
           <v-card-actions>
-            <v-btn color="orange lighten-2" text> Explore </v-btn>
+            <v-btn color="orange lighten-2" text @click="toPostDetail(item._id.$oid)"> Explore </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -63,12 +63,16 @@ export default {
     this.posts();
   },
   methods: {
+    toPostDetail(_post_id) {
+      this.$router.push({
+        name: "Post",
+        params: { postID: _post_id },
+      });
+    },
     posts() {
-      this.axios
-        .get("blog_posts")
-        .then((response) => {
-          this.postList = response.data;
-        });
+      this.axios.get("blog_posts").then((response) => {
+        this.postList = response.data;
+      });
     },
   },
   computed: {

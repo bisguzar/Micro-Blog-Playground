@@ -44,11 +44,9 @@ def add_category():
     # # to save the instance to the mongoDB collection = >
     try:
         body_form_data = request.get_json()
-        print(body_form_data)
 
         blog_dost = blog_categories(category_id=body_form_data.get(
             'category_id'), category_name=body_form_data.get('category_name'))
-        print(blog_dost)
         blog_dost.save()
         return make_response("success ", 200)
     except:

@@ -2,14 +2,16 @@
   <v-container>
     <v-row class="text-center">
       <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">Welcome to Micro-Blog</h1>
-        <p class="subheading font-weight-regular">
-          <a
-            href="https://github.com/ardabzlk/Micro-Blog-Playground"
-            target="_blank"
-            >repository</a
-          >
-        </p>
+        <h1 class="display-2 text-left font-weight-bold my-6">
+          Publish, grow, and learn, <br />all in one place.
+        </h1>
+        <h2 class="text-left">
+          If you have a story to tell, knowledge to share, or a perspective to
+          offer — <br />welcome home. Sign up for free so your writing can
+          thrive in a
+          network <br />supported by millions of readers
+        </h2>
+
       </v-col>
     </v-row>
   </v-container>

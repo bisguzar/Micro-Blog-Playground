@@ -15,7 +15,6 @@ Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 
 ApiService.init("http://127.0.0.1:8000/");
-console.log(ApiService);
 // GOOD
 router.beforeEach((to, from, next) => {
   // Ensure we checked auth before each page load.
