@@ -55,7 +55,7 @@ const routes = [
     ],
   },
   {
-    path: "/login",
+    path: "/",
     component: () => import("@/layout/ExternalLayout.vue"),
     meta: {
       requiresAuth: false,

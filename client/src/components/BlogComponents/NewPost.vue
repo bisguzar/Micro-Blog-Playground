@@ -4,7 +4,7 @@
       <v-col>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-row>
-            <v-col sm="6" xs="12">
+            <v-col sm="4" xs="4">
               <v-text-field
                 v-model="postDetail.title"
                 :rules="required"
@@ -12,7 +12,8 @@
                 required
               ></v-text-field>
             </v-col>
-            <v-col sm="6" xs="12">
+
+            <v-col sm="4" xs="4">
               <v-select
                 v-model="postDetail.category"
                 :items="categoryItems"
@@ -22,6 +23,15 @@
                 label="Item"
                 required
               ></v-select>
+            </v-col>
+            <v-col sm="4" xs="4">
+              <v-file-input
+                label="File input"
+                filled
+                accept="image/png, image/jpg, image/jpeg"
+                prepend-icon="mdi-camera"
+                @change="setFile"
+              ></v-file-input>
             </v-col>
           </v-row>
 
@@ -52,7 +62,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import axios from "axios"
+import axios from "axios";
 export default {
   name: "new-post",
   data: () => ({
@@ -61,6 +71,8 @@ export default {
     categoryItems: [],
     postDetail: { title: "", content: "", category: null },
     id_token: "Bearer " + localStorage.getItem("id_token"),
+    image: {},
+    upFile: null,
   }),
   mounted() {
     this.getPostCategories();
@@ -68,10 +80,12 @@ export default {
   methods: {
     newBlogPost() {
       const bodyFormData = {
-        user_id: this.currentUser.uid,
+        user_id: this.currentUser.uid.$oid,
         title: this.postDetail.title,
         content: this.postDetail.content,
         category_id: this.postDetail.category,
+        username: this.currentUser.username,
+        img_base64: this.upFile
       };
       axios({
         method: "post",
@@ -81,10 +95,11 @@ export default {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-      }).then(() => { })
-        .catch((err) => {
-        console.log(err);
       })
+        .then(() => {})
+        .catch((err) => {
+          console.log(err);
+        });
     },
     getPostCategories() {
       let data = {
@@ -107,6 +122,55 @@ export default {
     },
     resetValidation() {
       this.$refs.form.resetValidation();
+    },
+    konsolla() {
+      console.log(this.currentUser.uid.$oid);
+    },
+    setFile(e) {
+      try {
+        const file = e;
+        this.extensionHandler = file.type.split("/")[0];
+        if (
+          (typeof FileReader === "function" && e.type == "image/jpeg") ||
+          e.type == "image/png" ||
+          e.type == "image/jpg"
+        ) {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = (event) => {
+            let img = new Image();
+            img.onload = () => {
+              this.image.width = img.width;
+              this.image.height = img.height;
+            };
+            this.upFile = event.target.result;
+            img.src = event.target.result;
+          };
+
+          this.fileName = file.name;
+        } else {
+          this.newPhotoTextField = [];
+          this.photoFormValid = false;
+          this.fileName = "";
+          this.upFile = null;
+          this.file = "";
+          this.image = {
+            height: "",
+            width: "",
+          };
+        }
+      } catch (e) {
+        this.file = "";
+        this.newPhotoTextField = [];
+        this.photoFormValid = false;
+        this.file = "";
+        this.fileName = "";
+        this.upFile = null;
+        this.image = {
+          height: "",
+          width: "",
+        };
+      }
     },
   },
   computed: {

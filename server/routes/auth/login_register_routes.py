@@ -57,6 +57,7 @@ def login():
     else:
         user = User.objects(email=authUserEmail).first()
         response_data = {"uid": user.id}
+        response_data["username"] = user.username
         if check_password_hash(user.password, authPassword):
             token = jwt.encode({'email': user.email, 'exp': datetime.datetime.utcnow(
             ) + datetime.timedelta(hours=6)}, 'micro-blog-playground')
@@ -67,7 +68,6 @@ def login():
             return make_response(json_data, 200)
         else:
             return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
 
 
 # -----------------------------------------------------------

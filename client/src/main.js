@@ -22,7 +22,15 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     // Ensure we checked auth before each page load.
-    Promise.all([store.dispatch(VERIFY_AUTH)]).then(next);
+    if (
+      !store.state.auth.isAuthenticated &&
+      // ❗️ Avoid an infinite redirect
+      to.meta.requiresAuth
+    ) {
+      router.push("/Login");
+    } else {
+      Promise.all([store.dispatch(VERIFY_AUTH)]).then(next);
+    }
   }
 
   // reset config to initial state

@@ -6,7 +6,7 @@ from api_constants import mongo_password, mongo_user
 from flask_debugtoolbar import DebugToolbarExtension
 from routes.user_routes import users, singleton_user
 from routes.auth.login_register_routes import login, register
-from routes.blog_posts_routes import add_post, posts, blog_post_categories, single_post
+from routes.blog_posts_routes import add_post, posts, blog_post_categories, single_post, comment, delete_post
 from flask_cors import CORS
 from models.models import db
 
@@ -40,6 +40,7 @@ db.connect(host=DB_URI)
 
 # ----------------------------------------------------
 # * Login Register routes start
+
 app.add_url_rule("/register", view_func=register,
                  methods=["GET", "POST"])
 
@@ -63,9 +64,14 @@ app.add_url_rule("/blog_posts", view_func=posts,
 
 app.add_url_rule("/blog_posts/<post_id>", view_func=single_post,
                  methods=["GET"])
+app.add_url_rule("/blog_posts/<post_id>", view_func=delete_post,
+                 methods=["DELETE"])
 
 app.add_url_rule("/blog_posts/categories", view_func=blog_post_categories,
                  methods=["GET"])
+
+app.add_url_rule("/comment/<comment_id>", view_func=comment,
+                 methods=["GET", "POST", "DELETE", "UPDATE"])
 
 """
 app.add_url_rule("/blog_posts/add_category", view_func=add_category,

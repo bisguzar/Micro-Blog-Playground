@@ -118,7 +118,7 @@ const mutations = {
   [SET_AUTH](state, user) {
     state.isAuthenticated = true;
     state.errors = {};
-    state.user.uid = user.uid.$oid;
+    state.user = user;
     JwtService.saveToken(user.token);
   },
   [SET_PASSWORD](state, password) {
@@ -134,6 +134,7 @@ const mutations = {
     state.isAuthenticated = false;
     state.user = {};
     JwtService.destroyToken();
+    axios.defaults.headers.common["Authorization"] = null;
   },
 };
 
@@ -143,3 +144,6 @@ export default {
   mutations,
   getters,
 };
+
+
+

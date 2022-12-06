@@ -27,10 +27,7 @@
         xs="12"
       >
         <v-card class="mx-auto" max-width="420" max-height="340">
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-            height="200px"
-          ></v-img>
+          <v-img :src="item.img_base64" height="200px"></v-img>
           <v-card-title>
             {{ item.title }}
           </v-card-title>
@@ -41,7 +38,21 @@
             {{ item.content }}
           </v-card-subtitle>
           <v-card-actions>
-            <v-btn color="orange lighten-2" text @click="toPostDetail(item._id.$oid)"> Explore </v-btn>
+            <v-btn
+              color="orange lighten-2"
+              text
+              @click="toPostDetail(item._id.$oid)"
+            >
+              Explore
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="error"
+              icon
+              @click="deletePost(item._id.$oid)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -72,6 +83,22 @@ export default {
     posts() {
       this.axios.get("blog_posts").then((response) => {
         this.postList = response.data;
+      });
+    },
+    deletePost(_id) {
+      const bodyFormData = {
+        id: _id,
+      };
+      this.axios({
+        method: "delete",
+        url: "blog_posts/" + _id,
+        data: JSON.stringify(bodyFormData),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }).then(() => {
+        this.posts();
       });
     },
   },

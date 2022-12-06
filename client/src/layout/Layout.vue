@@ -8,7 +8,9 @@
       <v-spacer></v-spacer>
 
       <router-link to="/"><div class="white--text mx-2">Home</div></router-link>
-      <router-link to="/Posts"><div class="white--text mx-2">Posts</div></router-link>
+      <router-link to="/Posts"
+        ><div class="white--text mx-2">Posts</div></router-link
+      >
 
       <router-link to="/user"
         ><div class="white--text mx-2">User</div></router-link
@@ -29,7 +31,7 @@
             <v-list-item-title
               class="text-primary"
               style="cursor: pointer"
-              @click="purgeAuth()"
+              @click="logout()"
               ><div class="primary--text cursor-pointer">
                 Logout
               </div></v-list-item-title
@@ -44,27 +46,35 @@
 
 <script>
 import { LOGOUT } from "@/core/services/store/auth.module";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   data() {
     return {
-      menuItems: [
-        { title: "Profile", route: "/user" },
-      ],
+      menuItems: [{ title: "Profile", route: "/user" }],
     };
   },
+
+  mounted() {
+    if (!this.isAuthenticated) {
+        this.logout()
+    }
+  },
+
   methods: {
     logout() {
-    this.$store.dispatch(LOGOUT);
-    },
-    purgeAuth() {
-      this.logout()   
-      this.$router.push("login");
+      this.$store.dispatch(LOGOUT);
+      this.$router.push("Login")
     },
 
   },
 
-
+  computed: {
+    ...mapState({
+      errors: (state) => state.auth.errors,
+    }),
+    ...mapGetters(["isAuthenticated"]),
+  },
 };
 </script>
 
