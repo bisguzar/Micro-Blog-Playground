@@ -46,13 +46,18 @@
               Explore
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn
-              color="error"
-              icon
-              @click="deletePost(item._id.$oid)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
+            <v-chip outlined class="mx-2" @click="votePost(1, item._id.$oid)">
+              <v-avatar left>
+                <v-icon icon color="success" small>mdi-thumb-up</v-icon>
+              </v-avatar>
+              {{ item.like }}
+            </v-chip>
+            <v-chip outlined class="mx-2" @click="votePost(2, item._id.$oid)">
+              <v-avatar left>
+                <v-icon color="error" small>mdi-thumb-down</v-icon>
+              </v-avatar>
+              {{ item.dislike }}
+            </v-chip>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -61,6 +66,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "post-grid-components",
   data() {
@@ -74,6 +81,37 @@ export default {
     this.posts();
   },
   methods: {
+    votePost(_vote_value, _post_id) {
+      const bodyFormData = {
+        vote_value: _vote_value,
+        post_id: _post_id,
+        author_id: this.currentUser.uid.$oid,
+      };
+      this.axios({
+        method: "post",
+        url: "rate",
+        data: JSON.stringify(bodyFormData),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }).then((response) => {
+        if (response.data == "Success") {
+          let elementPost = this.postList.findIndex(
+            (obj) => obj._id.$oid == _post_id
+          );
+          if (_vote_value == 1) {
+            this.postList[elementPost].like += 1;
+            this.postList[elementPost].dislike -= 1;
+          }
+          else if (_vote_value == 2) {
+            this.postList[elementPost].dislike += 1;
+            this.postList[elementPost].like -= 1;
+            
+          }
+        }
+      });
+    },
     toPostDetail(_post_id) {
       this.$router.push({
         name: "Post",
@@ -103,6 +141,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["currentUser"]),
     filteredList() {
       return this.postList.filter((post) => {
         return this.keyword

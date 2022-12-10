@@ -1,5 +1,5 @@
 from flask import request, make_response
-from models.blog_posts_model import blog_posts, blog_categories, blog_post_comment
+from models.blog_posts_model import blog_posts, blog_categories, blog_post_comment, blog_post_vote
 import datetime
 from services.Exceptions import InvalidUsage
 from services.JWT_service import token_required
@@ -42,6 +42,46 @@ def add_post(current_user):
 # ------------------------------------------------------------
 
 # ------------------------------------------------------------
+# *like
+
+
+@token_required
+def vote(current_user):
+    json_body_form_data = request.get_json()
+    _post_id = json_body_form_data["post_id"]
+    _author_id = json_body_form_data["author_id"]
+    _vote_value = json_body_form_data["vote_value"]
+
+    post_exists = blog_post_vote.objects(
+        post_id=_post_id, author_id=_author_id).count() > 0
+    if post_exists:
+        db_vote = blog_post_vote.objects.get(
+            post_id=_post_id, author_id=_author_id)
+
+        if (_vote_value == 1 and db_vote.vote_value == 1):
+            return make_response("already voted", StatusCodeEnums.stat0["code"])
+        elif (_vote_value == 1 and db_vote.vote_value == 2):
+            db_vote.update(vote_value=_vote_value)
+        elif (_vote_value == 2 and db_vote.vote_value == 2):
+            return make_response("already voted", StatusCodeEnums.stat0["code"])
+        elif (_vote_value == 2 and db_vote.vote_value == 1):
+            db_vote.update(vote_value=_vote_value)
+        elif (_vote_value == 0):
+            db_vote.update(vote_value=_vote_value)
+
+    else:
+        user_vote = blog_post_vote(
+            post_id=_post_id, author_id=_author_id, vote_value=_vote_value)
+        user_vote.save()
+
+        # json_data_w_backslashes = json_util.dumps(db_vote)
+        # json_data = json.loads(json_data_w_backslashes)
+
+    return make_response(StatusCodeEnums.stat0["msg"], StatusCodeEnums.stat0["code"])
+    # postun içinde aynı kullanıcının vote varsa güncellenecek yoksa eklenecek
+
+# ------------------------------------------------------------
+# ------------------------------------------------------------
 # *delete post
 
 
@@ -82,6 +122,10 @@ def add_category():
 def posts(current_user):
     posts = []
     for post in blog_posts.objects():
+        post["like"] = blog_post_vote.objects(post_id=post.id,
+                                              vote_value=1).count()
+        post["dislike"] = blog_post_vote.objects(post_id=post.id,
+                                                 vote_value=2).count()
         posts.append(post)
     return make_response(posts)
 # ------------------------------------------------------------
@@ -103,30 +147,31 @@ def blog_post_categories(current_user):
 
 
 @token_required
-def single_post(current_user, post_id):
-    response = {}
-    try:
-        post = blog_posts.objects(id=post_id).first()
-        # post = user.to_json()
-        response["data"] = post
-        response["status"] = 200
+def single_post(current_user, param_post_id):
+    response = []
+    # try:
+    post = blog_posts.objects(id=param_post_id).first()
+    post["like"] = blog_post_vote.objects(post_id=param_post_id,
+                                          vote_value=1).count()
+    post["dislike"] = blog_post_vote.objects(post_id=param_post_id,
+                                             vote_value=2).count()
+    # post = user.to_json()
+    response.append(post)
 
-        return make_response(response)
-    except:
-        response["data"] = "User not found"
-        response["status"] = 404
-        return make_response(response, 404)
+    return make_response(response, 200)
+    # except:
+    #     response["data"] = "User not found"
+    #     response["status"] = 404
+    #     return make_response(response, 404)
 # ------------------------------------------------------------
 
 
 @token_required
 def comment(current_user, comment_id):
-    response = {}
+    response = []
     if request.method == "GET":
         comment = blog_post_comment.objects(post_id=comment_id)
-        # post = user.to_json()
-        response["data"] = comment
-
+        response.append(comment)
         return make_response(response, StatusCodeEnums.stat0["code"])
     elif request.method == "POST":
         json_body_form_data = request.get_json()

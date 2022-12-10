@@ -85,7 +85,7 @@ export default {
         content: this.postDetail.content,
         category_id: this.postDetail.category,
         username: this.currentUser.username,
-        img_base64: this.upFile
+        img_base64: this.upFile,
       };
       axios({
         method: "post",
@@ -96,7 +96,9 @@ export default {
           Accept: "application/json",
         },
       })
-        .then(() => {})
+        .then(() => {
+          this.$router.push({ name: "Posts" });
+        })
         .catch((err) => {
           console.log(err);
         });

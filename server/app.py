@@ -6,7 +6,7 @@ from api_constants import mongo_password, mongo_user
 from flask_debugtoolbar import DebugToolbarExtension
 from routes.user_routes import users, singleton_user
 from routes.auth.login_register_routes import login, register
-from routes.blog_posts_routes import add_post, posts, blog_post_categories, single_post, comment, delete_post
+from routes.blog_posts_routes import add_post, posts, blog_post_categories, single_post, comment, delete_post, vote
 from flask_cors import CORS
 from models.models import db
 
@@ -25,6 +25,9 @@ app.debug = config["DEBUG"]
 # set a 'SECRET_KEY' to enable the Flask session cookies
 app.config["TESTING"] = config["TESTING"]
 app.config['SECRET_KEY'] = config["SECRET_KEY"]
+
+
+app.config['MONGODB_SETTINGS'] = {'db': 'testing', 'alias': 'default'}
 
 DebugToolbarExtension(app)
 
@@ -62,7 +65,7 @@ app.add_url_rule("/blog_posts/add", view_func=add_post,
 app.add_url_rule("/blog_posts", view_func=posts,
                  methods=["GET"])
 
-app.add_url_rule("/blog_posts/<post_id>", view_func=single_post,
+app.add_url_rule("/blog_posts/<param_post_id>", view_func=single_post,
                  methods=["GET"])
 app.add_url_rule("/blog_posts/<post_id>", view_func=delete_post,
                  methods=["DELETE"])
@@ -72,6 +75,10 @@ app.add_url_rule("/blog_posts/categories", view_func=blog_post_categories,
 
 app.add_url_rule("/comment/<comment_id>", view_func=comment,
                  methods=["GET", "POST", "DELETE", "UPDATE"])
+
+
+app.add_url_rule("/rate", view_func=vote,
+                 methods=["POST"])
 
 """
 app.add_url_rule("/blog_posts/add_category", view_func=add_category,
