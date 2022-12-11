@@ -96,19 +96,21 @@ export default {
           Accept: "application/json",
         },
       }).then((response) => {
-        if (response.data == "Success") {
-          let elementPost = this.postList.findIndex(
-            (obj) => obj._id.$oid == _post_id
-          );
-          if (_vote_value == 1) {
-            this.postList[elementPost].like += 1;
-            this.postList[elementPost].dislike -= 1;
-          }
-          else if (_vote_value == 2) {
-            this.postList[elementPost].dislike += 1;
-            this.postList[elementPost].like -= 1;
+        if (response.status == 200) {
+          console.log(response.status);
+          this.posts();
+          // let elementPost = this.postList.findIndex(
+          //   (obj) => obj._id.$oid == _post_id
+          // );
+          // if (_vote_value == 1) {
+          //   this.postList[elementPost].like += 1;
+          //   this.postList[elementPost].dislike -= 1;
+          // }
+          // else if (_vote_value == 2) {
+          //   this.postList[elementPost].dislike += 1;
+          //   this.postList[elementPost].like -= 1;
             
-          }
+          // }
         }
       });
     },

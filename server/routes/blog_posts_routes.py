@@ -52,18 +52,20 @@ def vote(current_user):
     _author_id = json_body_form_data["author_id"]
     _vote_value = json_body_form_data["vote_value"]
 
-    post_exists = blog_post_vote.objects(
+    post_vote_exists = blog_post_vote.objects(
         post_id=_post_id, author_id=_author_id).count() > 0
-    if post_exists:
+    if post_vote_exists:
         db_vote = blog_post_vote.objects.get(
             post_id=_post_id, author_id=_author_id)
 
         if (_vote_value == 1 and db_vote.vote_value == 1):
-            return make_response("already voted", StatusCodeEnums.stat0["code"])
+            db_vote.delete()
+            return make_response("vote deleted", StatusCodeEnums.stat0["code"])
         elif (_vote_value == 1 and db_vote.vote_value == 2):
             db_vote.update(vote_value=_vote_value)
         elif (_vote_value == 2 and db_vote.vote_value == 2):
-            return make_response("already voted", StatusCodeEnums.stat0["code"])
+            db_vote.delete()
+            return make_response("vote deleted", StatusCodeEnums.stat0["code"])
         elif (_vote_value == 2 and db_vote.vote_value == 1):
             db_vote.update(vote_value=_vote_value)
         elif (_vote_value == 0):

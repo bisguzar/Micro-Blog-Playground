@@ -196,14 +196,15 @@ export default {
           Accept: "application/json",
         },
       }).then((response) => {
-        if (response.data == "Success") {
-          if (_vote_value == 1) {
-            this.postList.like += 1;
-            this.postList.dislike -= 1;
-          } else if (_vote_value == 2) {
-            this.postList.dislike += 1;
-            this.postList.like -= 1;
-          }
+        if (response.status == 200) {
+          this.getPost();
+          // if (_vote_value == 1) {
+          //   this.postList.like += 1;
+          //   this.postList.dislike -= 1;
+          // } else if (_vote_value == 2) {
+          //   this.postList.dislike += 1;
+          //   this.postList.like -= 1;
+          // }
         }
       });
     },

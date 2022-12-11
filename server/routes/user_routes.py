@@ -46,19 +46,19 @@ def singleton_user(current_user, uid):
 
 # create a user
 
-# user = User(user_id=ObjectId(), name="Salih", surname="Bozlak")
+# user = User(user_id=ObjectId(), name="john", surname="doe")
 # to save the instance to the mongoDB collection =>
 # user.save()
 
 
 # fetch the user
-# user = User.objects(name="Ayşe").first()
+# user = User.objects(name="John").first()
 
 # update the user
 # user.update(id=rndId)
 
 # # add another user
-# user = User(user_id=2, name="Meltem", surname="Bozlak")
+# user = User(user_id=2, name="foo", surname="bar")
 # user.save()
 
 
@@ -71,9 +71,9 @@ def singleton_user(current_user, uid):
 
 # fetch all the users
 # ----------------------------------------------------
-# find users whose  surname-name contains Bozlak
+# find users whose  surname-name contains doe
 # userList = []
-# for user in User.objects(surname__contains="Bozlak"):
+# for user in User.objects(surname__contains="doe"):
 #     userList.append(user.to_json())
 # print(userList)
 # ----------------------------------------------------
