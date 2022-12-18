@@ -2,7 +2,9 @@
   <div>
     <v-app-bar app color="primary" class="mb-12" dark>
       <div class="d-flex align-center">
-        <v-toolbar-title>Micro-Blog</v-toolbar-title>
+        <router-link to="/" class="cursor-pointer">
+        <v-img src="@/assets/logo-black.svg" max-height="80" max-width="150"></v-img>
+        </router-link>
       </div>
 
       <v-spacer></v-spacer>
@@ -22,11 +24,19 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item v-for="(item, index) in menuItems" :key="index"
-            ><router-link :to="item.route" class="text-decoration-none">
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </router-link>
-          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>
+              <router-link
+                to="/profile"
+                class="text-decoration-none cursor-pointer"
+              >
+                <div class="secondary--text font-weight-black">
+                  {{ this.currentUser.username }}
+                </div>
+              </router-link></v-list-item-title
+            ></v-list-item
+          >
+
           <v-list-item>
             <v-list-item-title
               class="text-primary"
@@ -41,39 +51,46 @@
       </v-menu>
     </v-app-bar>
     <router-view />
+    <FooterC></FooterC>
   </div>
 </template>
 
 <script>
 import { LOGOUT } from "@/core/services/store/auth.module";
 import { mapGetters, mapState } from "vuex";
-
+import FooterC from "./Footer.vue";
 export default {
   data() {
     return {
       menuItems: [{ title: "Profile", route: "/user" }],
     };
   },
+  components: {
+    FooterC,
+  },
 
   mounted() {
     if (!this.isAuthenticated) {
-        this.logout()
+      this.$router.push({ name: "login" }).then(() => {
+        this.$store.dispatch(LOGOUT);
+      });
     }
   },
-
+  beforeDestroy() {
+    this.logout();
+  },
   methods: {
     logout() {
       this.$store.dispatch(LOGOUT);
-      this.$router.push("Login")
+      this.$router.push("Login");
     },
-
   },
 
   computed: {
     ...mapState({
       errors: (state) => state.auth.errors,
     }),
-    ...mapGetters(["isAuthenticated"]),
+    ...mapGetters(["isAuthenticated", "currentUser"]),
   },
 };
 </script>

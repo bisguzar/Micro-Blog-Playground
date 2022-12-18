@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="post-detail">
     <v-row class="align-center justify-center">
       <v-col sm="8" class="text-left">
         <h1>{{ postDetail.title }}</h1>
@@ -34,11 +34,10 @@
               {{ postDetail.content }}
             </p>
           </v-col>
-          <v-col sm="4" class="d-flex justify-end">
+          <v-col sm="4" class="text-right">
             <v-img
-              lazy-src="https://picsum.photos/id/11/10/6"
-              max-height="400"
-              max-width="400"
+              max-height="480"
+              contain
               :src="postDetail.img_base64"
             ></v-img>
             <v-btn color="error" icon @click="deletePost(post_id)">
@@ -126,7 +125,6 @@ export default {
     getPostComments() {
       this.axios.get("comment/" + this.post_id).then((response) => {
         this.comments = response.data[0];
-
       });
     },
     deletePostComments(_id) {

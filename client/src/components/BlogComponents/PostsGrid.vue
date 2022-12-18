@@ -1,8 +1,10 @@
 !
 <template>
-  <div>
-    <v-row class="mt-4 mx-2">
-      <v-col sm="4" md="3" xs="8">
+  <v-container class="posts-grid" grid-list-xs>
+    
+  <div >
+    <v-row class="mt-4">
+      <v-col>
         <v-text-field
           label="Search..."
           id="search-post"
@@ -11,29 +13,30 @@
         ></v-text-field>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col sm="1" md="3" xs="2" class="text-right mr-7"
+      <v-col  class="text-right "
         ><v-btn color="primary" @click="$router.push('New_Post')"
           >New Post</v-btn
         ></v-col
       >
     </v-row>
 
-    <v-row class="mt-5">
+    <v-row class="mt-5 px-0 mx-0">
       <v-col
         v-for="(item, index) in filteredList"
         :key="index"
-        sm="4"
-        md="3"
         xs="12"
+        sm="6"
+        md="4"
+        lg="3"
       >
-        <v-card class="mx-auto" max-width="420" max-height="340">
-          <v-img :src="item.img_base64" height="200px"></v-img>
+        <v-card  max-width="420" max-height="340">
+          <v-img height="200" contain :src="item.img_base64"></v-img>
           <v-card-title>
             {{ item.title }}
           </v-card-title>
           <v-card-subtitle
-            class="d-inline-block text-truncate"
-            style="max-width: 400px"
+            class="d-inline-block text-truncate posts-grid__card-subt"
+
           >
             {{ item.content }}
           </v-card-subtitle>
@@ -63,6 +66,8 @@
       </v-col>
     </v-row>
   </div>
+  </v-container>
+
 </template>
 
 <script>
@@ -109,7 +114,7 @@ export default {
           // else if (_vote_value == 2) {
           //   this.postList[elementPost].dislike += 1;
           //   this.postList[elementPost].like -= 1;
-            
+
           // }
         }
       });

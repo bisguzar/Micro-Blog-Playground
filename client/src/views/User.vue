@@ -3,9 +3,20 @@
     <v-row class="align-center justify-center">
       <v-col cols="8">
         <v-card class="mt-12">
+          <v-card-title>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
           <v-data-table
             :headers="headers"
             :items="userList"
+            
+            :search="search"
             :items-per-page="5"
             class="elevation-1"
           ></v-data-table>
@@ -18,6 +29,7 @@
 <script>
 export default {
   data: () => ({
+     search: '',
     headers: [
       {
         text: "Name",

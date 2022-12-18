@@ -4,13 +4,6 @@ from models.models import db
 
 
 class blog_posts(db.Document):
-    """
-    Blog_Posts model for blog_posts collection
-    user
-    header
-    content
-    date
-    """
 
     author_id = db.ObjectIdField(null=False, required=True, exists=True)
     author_username = db.StringField(null=False, required=True, exists=True)

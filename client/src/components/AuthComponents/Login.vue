@@ -1,10 +1,13 @@
 <template>
   <v-container fill-height fluid>
+
     <v-row class="align-center justify-center">
-      <v-col cols="4">
-        <v-card class="elevation-0" height="120%">
+      <v-col xl="4" lg="6" sm="8" cols="12">
+        <v-img src="@/assets/micro-blog-logo.png" />
+        <v-card class="elevation-0" >
           <v-card-title primary-title> Please Login </v-card-title>
-          <v-form ref="form" v-model="valid" lazy-validation>
+          <v-card-text>
+                   <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
               v-model="loginInfo.email"
               label="E-mail"
@@ -16,13 +19,16 @@
               v-model="loginInfo.password"
               label="Password"
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-               :type="showPassword ? 'text' : 'password'"
-                @click:append="showPassword = !showPassword"
+              :type="showPassword ? 'text' : 'password'"
+              @click:append="showPassword = !showPassword"
               :rules="nonEmpty"
               required
             ></v-text-field>
-
-            <v-btn
+          </v-form>
+   
+          </v-card-text>
+          <v-card-actions>
+                        <v-btn
               :disabled="!valid"
               color="success"
               class="mr-4"
@@ -31,8 +37,7 @@
             >
               Login
             </v-btn>
-            
-            <v-btn
+                        <v-btn
               color="success"
               class="mr-4"
               @click="$router.push('register')"
@@ -40,7 +45,7 @@
             >
               Sign Up
             </v-btn>
-          </v-form>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -56,7 +61,7 @@ export default {
     return {
       valid: true,
       loading: false,
-       showPassword: false,
+      showPassword: false,
       loginInfo: { email: "", password: "" },
       nonEmpty: [(v) => !!v || "E-mail is required"],
       nameRules: [

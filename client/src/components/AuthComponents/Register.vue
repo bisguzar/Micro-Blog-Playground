@@ -1,7 +1,7 @@
 <template>
   <v-container fill-height fluid>
     <v-row class="align-center justify-center">
-      <v-col cols="4">
+      <v-col xl="4" lg="6" sm="8" cols="12">
         <v-card class="elevation-0" height="120%">
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
@@ -31,10 +31,14 @@
             ></v-text-field>
             <v-text-field
               v-model="registerInfo.password"
-              :rules="NonEmpty"
               label="Password"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="showPassword ? 'text' : 'password'"
+              @click:append="showPassword = !showPassword"
+             
               required
             ></v-text-field>
+
           </v-form>
           <v-card-actions>
             <v-btn
@@ -66,6 +70,8 @@ export default {
     return {
       valid: true,
       loading: false,
+            showPassword: false,
+
       registerInfo: {
         name: "",
         surname: "",

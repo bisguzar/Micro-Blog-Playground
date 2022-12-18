@@ -52,29 +52,47 @@ def vote(current_user):
     _author_id = json_body_form_data["author_id"]
     _vote_value = json_body_form_data["vote_value"]
 
+    blog_post = blog_posts.objects(id=_post_id).first()
     post_vote_exists = blog_post_vote.objects(
         post_id=_post_id, author_id=_author_id).count() > 0
     if post_vote_exists:
         db_vote = blog_post_vote.objects.get(
             post_id=_post_id, author_id=_author_id)
-
+        # vote count geri alınacak
+        # maliyeti azaltabiliriz
+        # db +- transaction içinde gerçekleşmeli(consistency için)
+        # 1 like
+        #
+        _like = blog_post.like
+        _dislike = blog_post.dislike
         if (_vote_value == 1 and db_vote.vote_value == 1):
             db_vote.delete()
+            if _like > 0:
+                blog_post.update(like=_like - 1)
             return make_response("vote deleted", StatusCodeEnums.stat0["code"])
         elif (_vote_value == 1 and db_vote.vote_value == 2):
+            blog_post.update(like=_like+1, dislike=_dislike-1)
             db_vote.update(vote_value=_vote_value)
+            return make_response("vote deleted", StatusCodeEnums.stat0["code"])
         elif (_vote_value == 2 and db_vote.vote_value == 2):
             db_vote.delete()
+            if _dislike > 0:
+                blog_post.update(dislike=_dislike-1)
             return make_response("vote deleted", StatusCodeEnums.stat0["code"])
         elif (_vote_value == 2 and db_vote.vote_value == 1):
+            blog_post.update(like=_like-1, dislike=_dislike+1)
             db_vote.update(vote_value=_vote_value)
-        elif (_vote_value == 0):
-            db_vote.update(vote_value=_vote_value)
-
+            return make_response("vote updated", StatusCodeEnums.stat0["code"])
+        else:
+            return make_response(StatusCodeEnums.stat2["msg"], StatusCodeEnums.stat2["code"])
     else:
         user_vote = blog_post_vote(
             post_id=_post_id, author_id=_author_id, vote_value=_vote_value)
         user_vote.save()
+        if (_vote_value == 1):
+            blog_post.update(like=+1)
+        elif (_vote_value == 2):
+            blog_post.update(dislike=+1)
 
         # json_data_w_backslashes = json_util.dumps(db_vote)
         # json_data = json.loads(json_data_w_backslashes)
@@ -153,11 +171,12 @@ def single_post(current_user, param_post_id):
     response = []
     # try:
     post = blog_posts.objects(id=param_post_id).first()
-    post["like"] = blog_post_vote.objects(post_id=param_post_id,
-                                          vote_value=1).count()
-    post["dislike"] = blog_post_vote.objects(post_id=param_post_id,
-                                             vote_value=2).count()
-    # post = user.to_json()
+    # post["like"] = blog_post_vote.objects(post_id=param_post_id,
+    #                                       vote_value=1).count()
+
+    # post["dislike"] = blog_post_vote.objects(post_id=param_post_id,
+    #                                          vote_value=2).count()
+    # # post = user.to_json()
     response.append(post)
 
     return make_response(response, 200)

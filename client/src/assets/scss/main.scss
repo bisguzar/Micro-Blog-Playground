@@ -1,0 +1,90 @@
+// global values
+@import "./config";
+
+// -------------------------------------
+// home style begin
+.home {
+  height: max-content;
+
+
+}
+@media (max-width: 850px) {
+  .home {
+    &__image-container {
+      // visibility: hidden;
+      display: none;
+    }
+  }
+}
+
+// home style end
+// -------------------------------------
+// footer style begin
+.footer {
+  &__custom-footer {
+    position: relative !important;
+    bottom: 0;
+    width: 100%;
+  }
+  &__card {
+    width: 100%;
+    background-color: $primary-black-2 !important;
+  }
+}
+// footer style end
+// -------------------------------------
+
+// -------------------------------------
+// posts grid style begin
+.posts-grid {
+  margin-bottom: 30%;
+  &__card-subt {
+    max-width: 100%;
+  }
+}
+@media (max-width: 1610px) {
+  .posts-grid {
+    &__card-subt {
+      max-width: 100%;
+    }
+  }
+}
+// posts grid style end
+// -------------------------------------
+
+// -------------------------------------
+// post detail style begin
+.post-detail {
+margin-bottom: 20%;
+}
+// post detail style end
+// -------------------------------------
+
+// -------------------------------------
+// profile style begin
+.profile-section {
+  margin-bottom: 20%;
+}
+
+.upload-btn{
+  position: absolute !important;
+    z-index: 999;
+    top: 121px;
+    color: cadetblue;
+    background: blueviolet;
+    background: rgb(125,198,163);
+    background: linear-gradient(50deg, rgba(125,198,163,1) 0%, rgba(35,216,227,1) 72%);
+}
+
+.bg{
+background: rgb(255,197,185);
+background: linear-gradient(0deg, rgba(255,197,185,0.711922268907563) 0%, rgba(220,246,223,0.6671043417366946) 35%, rgba(255,255,255,0.7539390756302521) 74%), url(https://images.unsplash.com/photo-1454117096348-e4abbeba002c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80);
+}
+
+.avatar-shadow{
+box-shadow: 0px 0px 10px 0px rgba(50,12,112,0.75);
+-webkit-box-shadow: 0px 0px 10px 0px rgba(50,12,112,0.75);
+-moz-box-shadow: 0px 0px 10px 0px rgba(50,12,112,0.75);
+}
+// profile style end
+// -------------------------------------
