@@ -2,9 +2,9 @@
   <v-container fill-height fluid>
 
     <v-row class="align-center justify-center">
-      <v-col xl="4" lg="6" sm="8" cols="12">
-        <v-img src="@/assets/micro-blog-logo.png" />
+      <v-col xl="3" lg="4" md="4" sm="5" cols="12">
         <v-card class="elevation-0" >
+          <v-img max-wi src="@/assets/micro-blog-logo.png" />
           <v-card-title primary-title> Please Login </v-card-title>
           <v-card-text>
                    <v-form ref="form" v-model="valid" lazy-validation>

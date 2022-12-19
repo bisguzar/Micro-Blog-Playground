@@ -49,13 +49,13 @@
               Explore
             </v-btn>
             <v-spacer></v-spacer>
-            <v-chip outlined class="mx-2" @click="votePost(1, item._id.$oid)">
+            <v-chip  class="mx-2">
               <v-avatar left>
                 <v-icon icon color="success" small>mdi-thumb-up</v-icon>
               </v-avatar>
               {{ item.like }}
             </v-chip>
-            <v-chip outlined class="mx-2" @click="votePost(2, item._id.$oid)">
+            <v-chip  class="mx-2" >
               <v-avatar left>
                 <v-icon color="error" small>mdi-thumb-down</v-icon>
               </v-avatar>
