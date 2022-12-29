@@ -1,8 +1,8 @@
 from flask import request, make_response
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-from models.user_model import User
-from services.Exceptions import InvalidUsage
+from src.models.user_model import User
+from src.services.Exceptions import InvalidUsage
 import datetime
 import jwt
 from bson import json_util
